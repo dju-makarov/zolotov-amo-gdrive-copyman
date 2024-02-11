@@ -27,6 +27,20 @@ class Lead(_Lead):
     duplicate_prompter_screens = custom_field.UrlCustomField("Дублирующие экраны-суфлеры")
     additional_options = custom_field.UrlCustomField("Дополнительные опции")
     additional_rent = custom_field.UrlCustomField("Доп. аренда")
+    additional = custom_field.UrlCustomField("Дополнительно")
+    has_memo_was_sent_to_customer = custom_field.CheckboxCustomField("Заказчику отправлена памятка")
+    has_access_to_channels= custom_field.CheckboxCustomField("Получены доступы к каналу/соц-сетям")
+    has_broadcast_scheduled= custom_field.CheckboxCustomField("Трансляция запланирована")
+    has_speakers_list = custom_field.CheckboxCustomField("Получен список спикеров для подписей")
+    has_speakers_regalia= custom_field.CheckboxCustomField("Получена таблица удаленных спикеров")
+    has_graphics = custom_field.CheckboxCustomField("Создана/получена эфирная графика")
+    has_and_agreed_GT_titles = custom_field.CheckboxCustomField("Созданы и согласованы титры GT Tittle")
+
+    def print_fields():
+        fields = ['event_type', 'broadcast_type', 'address', 'airing_time', 'montage_time', 'duration']
+        for field in fields:
+            print(field)
+
 
 
 
@@ -49,7 +63,7 @@ if __name__ == '__main__':
     #     print(lead.id, lead.name)
 
 
-    lead = Lead.objects.get(query='ТЕСТ ДЛЯ ДЖУ')
+    lead = Lead.objects.get(query='ТЕСТ ДЛЯ ДЖУ 2')
     # lead.name = 'ТЕСТ ДЛЯ ДЖУ 2'
     # lead.save()
     # print(lead.event_type)
@@ -76,13 +90,19 @@ if __name__ == '__main__':
     # print(lead.reporting_video)
     # print(lead.photo)
     # print(lead.duplicate_prompter_screens)
-    print(lead.additional_options)
+    # print(lead.additional_options)
     # print(lead.additional_rent)
-    # print(lead.)
-    # print(lead.)
-    # print(lead.)
-    # print(lead.)
-    # print(lead.)
-    # print(lead.)
-    # print(lead.)
-    # print(lead.)
+    # print(lead.additional)
+    # print(lead.has_memo_was_sent_to_customer)
+    # print(lead.has_access_to_channels)
+    # print(lead.has_broadcast_scheduled)
+    # print(lead.has_speakers_list)
+    # print(lead.has_speakers_regalia)
+    # print(lead.has_graphics)
+    # print(lead.has_and_agreed_GT_titles)
+
+    lead.print_fields()
+
+
+
+    #ending
