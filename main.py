@@ -1,5 +1,7 @@
 from amocrm.v2 import tokens, Lead as _Lead, custom_field
+import openpyxl
 
+CRM_LIVE_IDS = [511733, 511795, 511763, 512185, 511767, 511769, 511771, 511773, 511777, 511775, 511779, 511799, 512127, 519487, 519657, 511785, 511787, 512189, 512187, 517861]
 class Lead(_Lead):
     event_type = custom_field.UrlCustomField("Тип мероприятия")
     broadcast_type = custom_field.UrlCustomField("Вид трансляции")
@@ -36,13 +38,15 @@ class Lead(_Lead):
     has_graphics = custom_field.CheckboxCustomField("Создана/получена эфирная графика")
     has_and_agreed_GT_titles = custom_field.CheckboxCustomField("Созданы и согласованы титры GT Tittle")
 
-    def print_fields():
-        fields = ['event_type', 'broadcast_type', 'address', 'airing_time', 'montage_time', 'duration']
-        for field in fields:
-            print(field)
 
-
-
+def get_field_values(lead, field_id):
+    data = vars(lead)
+    values = []
+    for field in data['_data']['custom_fields_values']:
+        if field['field_id'] == field_id:
+            for value in field['values']:
+                values.append(value['value'])
+    return values
 
 
 if __name__ == '__main__':
@@ -91,7 +95,7 @@ if __name__ == '__main__':
     # print(lead.photo)
     # print(lead.duplicate_prompter_screens)
     # print(lead.additional_options)
-    # print(lead.additional_rent)
+    # print(get_field_values(lead, 512187))
     # print(lead.additional)
     # print(lead.has_memo_was_sent_to_customer)
     # print(lead.has_access_to_channels)
@@ -101,8 +105,40 @@ if __name__ == '__main__':
     # print(lead.has_graphics)
     # print(lead.has_and_agreed_GT_titles)
 
-    lead.print_fields()
+    # print(get_field_values(lead, 511795))
 
 
 
-    #ending
+    print(CRM_LIVE_IDS)
+
+    fields_data = {}
+    data = vars(lead)
+
+    # Проход по списку custom_fields_values и запись полей field_name и value в словарь
+    for field in data['_data']['custom_fields_values']:
+        if field['field_id'] in CRM_LIVE_IDS:
+            field_id = field['field_id']
+            field_name = field['field_name']
+            values = [str(value['value']) for value in field['values']]  # Преобразуем значения в строки
+            value = ', '.join(values)  # Объединяем значения в строку, разделенную запятыми
+            fields_data[field_id] = {'field_name': field_name, 'value': value}
+
+    print(fields_data)
+
+    # Создание нового файла Excel
+    workbook = openpyxl.Workbook()
+    sheet = workbook.active
+    sheet.title = 'Fields Data'
+
+    # Запись данных из словаря в файл Excel
+    header = ['Field Name', 'Value']
+    sheet.append(header)
+
+    for data in fields_data.values():
+        row = [data['field_name'], data['value']]
+        sheet.append(row)
+
+    # Сохранение файла
+    workbook.save('fields_data.xlsx')
+
+    #end
