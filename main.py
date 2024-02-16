@@ -150,8 +150,6 @@ def lead_to_excel(*, lead_name, project_name):
 
 def create_and_upload_file(file_name='test.txt', file_content='Hey Dude!', project_name= '2024-00-00 - testing'):
 
-    # try:
-
     # Создание папки
     drive = GoogleDrive(gauth)
     parent_folder_id = "1Xgs_mvBwKp3g4p4MI4Qfe0AENFLe0E5w"  # идентификатор родительской папки
@@ -170,16 +168,13 @@ def create_and_upload_file(file_name='test.txt', file_content='Hey Dude!', proje
     print(f"Папка {folder_name} успешно создана с идентификатором {folder['id']}")
 
 
-    #     return f"Папка {folder_name} успешно создана с идентификатором {folder['id']}"
-    # except Exception as _ex:
-    #     return 'Got some trouble, check your code please!'+_ex
 
 def lead_to_googlesheets(*, lead_name, project_name):
     lead = get_lead(lead_name)
     fields_data = optimize_lead_to_data(lead)
 
 
-    print(create_and_upload_file(file_name='hello.txt', file_content='Hello Friend'))
+    print(create_and_upload_file(file_name='hello.txt', file_content='Hello Friend', project_name=project_name))
 
 
 
