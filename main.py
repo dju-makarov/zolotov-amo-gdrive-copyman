@@ -148,25 +148,38 @@ def lead_to_excel(*, lead_name, project_name):
     # Сохранение файла
     workbook.save('fields_data.xlsx')
 
-def create_and_upload_file(file_name='test.txt', file_content='Hey Dude!'):
+def create_and_upload_file(file_name='test.txt', file_content='Hey Dude!', project_name= '2024-00-00 - testing'):
 
-    try:
-        drive = GoogleDrive(gauth)
+    # try:
 
-        my_file = drive.CreateFile({'title': f'{file_name}'})
-        my_file.SetContentString(file_content)
-        my_file.Upload()
+    # Создание папки
+    drive = GoogleDrive(gauth)
+    parent_folder_id = "1Xgs_mvBwKp3g4p4MI4Qfe0AENFLe0E5w"  # идентификатор родительской папки
+    folder_name = project_name
 
-        return f'File {file_name} was uploaded!Have a good day!'
-    except Exception as _ex:
-        return 'Got some trouble, check your code please!'
+    # Создание метаданных папки
+    folder_metadata = {
+        'title': folder_name,
+        'mimeType': 'application/vnd.google-apps.folder',
+        'parents': [{'id': parent_folder_id}]
+    }
+
+    # Загрузка папки
+    folder = drive.CreateFile(folder_metadata)
+    folder.Upload()
+    print(f"Папка {folder_name} успешно создана с идентификатором {folder['id']}")
+
+
+    #     return f"Папка {folder_name} успешно создана с идентификатором {folder['id']}"
+    # except Exception as _ex:
+    #     return 'Got some trouble, check your code please!'+_ex
 
 def lead_to_googlesheets(*, lead_name, project_name):
     lead = get_lead(lead_name)
     fields_data = optimize_lead_to_data(lead)
 
 
-    print(create_and_upload_file(file_name='hello/hello.txt', file_content='Hello Friend'))
+    print(create_and_upload_file(file_name='hello.txt', file_content='Hello Friend'))
 
 
 
