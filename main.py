@@ -152,8 +152,16 @@ def create_and_upload_file(file_name='test.txt', file_content='Hey Dude!', proje
 
     # Создание папки
     drive = GoogleDrive(gauth)
-    parent_folder_id = "1Xgs_mvBwKp3g4p4MI4Qfe0AENFLe0E5w"  # идентификатор родительской папки
+    parent_folder_id = "1Xgs_mvBwKp3g4p4MI4Qfe0AENFLe0E5w"  # идентификатор папки 1.КП
     folder_name = project_name
+    sourceKP_folder_id = "1GxPO5Dtg_Sgtd3IMQ07lZY-B0vvxrMOm"
+
+    # Проверка существования папки
+    file_list = drive.ListFile({'q': "'{}' in parents and trashed=false".format(parent_folder_id)}).GetList()
+    for file in file_list:
+        if file['title'] == folder_name and file['mimeType'] == 'application/vnd.google-apps.folder':
+            return f"папка с названием {folder_name} существует. Удалите существующую папку или создайте проект с другим названием"
+
 
     # Создание метаданных папки
     folder_metadata = {
@@ -165,7 +173,20 @@ def create_and_upload_file(file_name='test.txt', file_content='Hey Dude!', proje
     # Загрузка папки
     folder = drive.CreateFile(folder_metadata)
     folder.Upload()
-    print(f"Папка {folder_name} успешно создана с идентификатором {folder['id']}")
+    destination_folder_id = folder['id']
+    print(f"Папка {folder_name} успешно создана с идентификатором {destination_folder_id}")
+
+    # Копирование всех файлов из source папки в папку проекта
+    sourceKP_folder_files = drive.ListFile({'q': f"'{sourceKP_folder_id}' in parents"}).GetList()
+    for file in sourceKP_folder_files:
+        folder = destination_folder_id
+        title = file['title']
+        file = file['id']
+        drive.auth.service.files().copy(fileId=file,
+                                        body={"parents": [{"kind": "drive#fileLink",
+                                                           "id": folder}], 'title': title}).execute()
+
+    return "код выполнен"
 
 
 
@@ -255,7 +276,7 @@ class MainWindow(QWidget):
 #     window.show()
 #     sys.exit(app.exec_())
 
-lead_to_googlesheets(lead_name="ТЕСТ ДЛЯ ДЖУ 2", project_name="None")
+lead_to_googlesheets(lead_name="ТЕСТ ДЛЯ ДЖУ 2", project_name="zolotov_test")
 
 
 
